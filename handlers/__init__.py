@@ -17,3 +17,7 @@ router.include_routers(
     payment_router, # Система оплаты
     course_router # Курсы
 )
+
+__all__ = [
+    'router'
+]

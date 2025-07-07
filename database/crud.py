@@ -4,8 +4,8 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import select, delete, insert, update, func
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from db import async_session, init_db
-from models import User, Payments, Subscriptions
+from .db import async_session, init_db
+from .models import User, Payments, Subscriptions
 
 
 # asyncio.run(init_db())
@@ -218,6 +218,8 @@ class CrudeSubscriptions:
                                telegram_id: int,
                                plan: str,
                                day_count: int,
+                               price: int,
+                               kofficent: int = 8,
                                start_date: datetime | None = None,
                                ) -> bool:
         """
@@ -225,6 +227,8 @@ class CrudeSubscriptions:
         :param telegram_id: Telegram ID пользователя
         :param plan: Название тарифа
         :param day_count: Количество дней подписки
+        :param price: Сумма стоимости подписки
+        :param kofficent: Сумма предоставляемой компенсации по реферальной системе
         :param start_date: Дата начала подписки (по умолчанию сейчас)
         :return: True если успешно, False при ошибке
         """
@@ -276,6 +280,27 @@ class CrudeSubscriptions:
                     month=start_date.month,
                     year=start_date.year,
                 )
+                # Пользователь купившый подписку, получаем реферальный ID для выдачи баланса
+                user_buy = await conn.execute(select(User).where(User.telegram_id == telegram_id))
+                buy_result = await user_buy.scalar_one_or_none()
+                if buy_result:
+                    # Получаем реферальный код если он есть то тому пользователю выдаем компенсацию по реф системе
+                    ref_tg_id = buy_result.referral_id
+                    if ref_tg_id:
+                        # Рассчитываем сумму вознаграждения (пример: 10% от цены)
+                        # kofficent должен быть процентом (например 10 для 10%)
+                        reward = (price * kofficent) / 100
+
+                        # Обновляем баланс реферера
+                        # Важно: используем атомарное обновление напрямую в базе
+                        stmt = (
+                            update(User)
+                            .where(User.telegram_id == ref_tg_id)
+                            .values(balance=User.balance + reward)
+                        )
+
+                        await conn.execute(stmt)
+
                 conn.add(sub)
                 await conn.commit()
                 return True

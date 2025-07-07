@@ -7,7 +7,7 @@ from sqlalchemy import Integer, String, Column, Text, ForeignKey, Date, Boolean
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, UUID
 from sqlalchemy.orm import relationship
 
-from db import Base, DATABASE_URL
+from .db import Base, DATABASE_URL
 
 
 # Таблица Пользователей

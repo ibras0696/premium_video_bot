@@ -1,7 +1,7 @@
 # Игнорирование файла .env
 #.env
 # Игнор базы данных
-/database/Data_Base_WB.db
+/database/DataBase.db
 
 .idea
 .venv

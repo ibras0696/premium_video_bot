@@ -8,7 +8,7 @@ from typing import Callable, Awaitable, Any
 from aiogram import BaseMiddleware, Bot
 from aiogram.types import Update
 
-from config import ID_ADMIN
+from config import ADMIN_IDS
 
 
 class ErrorMiddleware(BaseMiddleware):
@@ -55,14 +55,17 @@ class ErrorMiddleware(BaseMiddleware):
 
             # Отправка админу
             if bot:
-                await bot.send_message(
-                    chat_id=ID_ADMIN,
-                    text=f"❌ Ошибка!"
-                         f"\nТелеграм ID: {telegram_id}"
-                         f"\nТелеграм Ник: {telegram_name}"
-                         f"\nВремя: {formatted_time}"
-                         f"\n\n<b>{type(e).__name__}:</b> {e}\n\n<pre>{tb[-700:-1]}</pre>",
-                    parse_mode="HTML"
-                )
-
+                try:
+                    for tg_id in ADMIN_IDS:
+                        await bot.send_message(
+                            chat_id=tg_id,
+                            text=f"❌ Ошибка!"
+                                 f"\nТелеграм ID: {telegram_id}"
+                                 f"\nТелеграм Ник: {telegram_name}"
+                                 f"\nВремя: {formatted_time}"
+                                 f"\n\n<b>{type(e).__name__}:</b> {e}\n\n<pre>{tb[-700:-1]}</pre>",
+                            parse_mode="HTML"
+                        )
+                except Exception as ex:
+                    print(f'Ошибк: {ex}')
 

@@ -15,3 +15,7 @@ router.include_routers(
     exclusive_router,
     all_course_router
 )
+
+__all__ = [
+    'router'
+]
