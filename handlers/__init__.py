@@ -1,6 +1,6 @@
 from aiogram import Router
 
-from .cource import router as course_router
+from .course import router as course_router
 
 from .payment import router as payment_router
 from .referral import router as referral_router

@@ -4,8 +4,8 @@ from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 from sqlalchemy import select, delete, insert, update, func
 from sqlalchemy.ext.asyncio import async_sessionmaker
 
-from db import async_session, init_db
-from models import User, Payments, Subscriptions
+from database.db import async_session, init_db
+from database.models import User, Payments, Subscriptions
 
 
 # asyncio.run(init_db())
