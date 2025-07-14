@@ -1,6 +1,6 @@
 from .models import *
 from .crud import *
-from .db import *
+from .db import init_db, DATABASE_URL, Base
 
 
 __all__ = [

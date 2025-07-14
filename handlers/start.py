@@ -6,6 +6,8 @@ from aiogram.types import Message
 # Функции с БД
 from database import CrudeUser
 
+# Функция
+from static import FSI_file_basic_1_path
 
 router = Router()
 
@@ -38,7 +40,9 @@ async def start_cmd(message: Message, state: FSMContext, command: CommandStart):
 # Обработка обычного старта
 @router.message(CommandStart())
 async def start_cmd(message: Message, state: FSMContext):
+    # Добавляем в Базу
+    await CrudeUser().add_user(telegram_id=message.from_user.id,
+                               user_name=message.from_user.username)
     # Очистка состояний
     await state.clear()
-
-    await message.answer('Привету')
+    await message.answer('Привет')
