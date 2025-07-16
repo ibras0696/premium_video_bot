@@ -282,7 +282,7 @@ class CrudeSubscriptions:
                 )
                 # Пользователь купившый подписку, получаем реферальный ID для выдачи баланса
                 user_buy = await conn.execute(select(User).where(User.telegram_id == telegram_id))
-                buy_result = await user_buy.scalar_one_or_none()
+                buy_result = user_buy.scalar_one_or_none()
                 if buy_result:
                     # Получаем реферальный код если он есть то тому пользователю выдаем компенсацию по реф системе
                     ref_tg_id = buy_result.referral_id
@@ -372,7 +372,7 @@ class CrudeSubscriptions:
                 return False
 
     # Функция для уменьшения подписки всех пользователей
-    async def all_reduce_subscriptions(self, days: int = 1) -> bool:
+    async def all_reduce_subscriptions(self, days: int = 1) -> bool | list[Subscriptions]:
         """
         Функция для уменьшения всех подписок на N количество дней
         :param days: Количество Дней
@@ -392,11 +392,12 @@ class CrudeSubscriptions:
                 for sub in subs:
                     if sub.day_count > 0:
                         sub.day_count = max(0, sub.day_count - days)
+                        conn.add(sub)
                         updated = True
 
                 if updated:
                     await conn.commit()
-                    return True
+                    return subs
         except Exception as ex:
             await conn.rollback()
             raise Exception(f'Ошибка при уменьшении всех подписок: {ex}')
@@ -437,7 +438,7 @@ class CrudeSubscriptions:
                 raise Exception(f'Ошибка при получения всех данных с таблицы подписок: {ex}')
 
     # Функция для проверки активности подписки
-    async def check_subscription(self, telegram_id: int, plan: str) -> bool:
+    async def check_subscription(self, telegram_id: int, plan: str) -> Subscriptions | None:
         """
         Проверка, есть ли у пользователя активная подписка определенного плана
         :param telegram_id: Telegram ID пользователя
@@ -451,7 +452,7 @@ class CrudeSubscriptions:
                     .where(Subscriptions.telegram_id == telegram_id, Subscriptions.plan == plan)
                 )
                 sub = result.scalar_one_or_none()
-                return bool(sub and sub.day_count > 0)
+                return sub
             except Exception as ex:
                 raise Exception(f'Ошибка при проверке подписки: {ex}')
 
@@ -472,6 +473,7 @@ class CrudePayments:
                           day_count: int,
                           pay_sum: int,
                           registered_at: datetime | None = None,
+                          referral_id: int | None = None
                           ) -> bool:
         """
         Добавляет платёж, если такого ещё не было
@@ -480,6 +482,7 @@ class CrudePayments:
         :param day_count: Кол-во дней подписки
         :param pay_sum: Сумма оплаты
         :param registered_at: Дата регистрации платежа (по умолчанию текущая)
+        :param referral_id: Реферальны айди | None
         :return: True — если добавлено, False — если уже существует
         """
         registered_at = registered_at or datetime.now(timezone.utc)
@@ -496,6 +499,7 @@ class CrudePayments:
                         Payments.plan == plan,
                         Payments.day_count == day_count,
                         Payments.pay_sum == pay_sum,
+                        Payments.referral_id == referral_id,
                         Payments.day == day,
                         Payments.month == month,
                         Payments.year == year
@@ -506,6 +510,11 @@ class CrudePayments:
                 if existing_payment:
                     return False  # Платёж уже есть
 
+                user = await conn.execute(select(User).where(User.telegram_id == telegram_id))
+                check = user.scalars().first()
+                if check:
+                    referral_id = check.referral_id
+
                 # Создаём новый платёж
                 new_payment = Payments(
                     telegram_id=telegram_id,
@@ -513,6 +522,7 @@ class CrudePayments:
                     day_count=day_count,
                     pay_sum=pay_sum,
                     registered_at=registered_at,
+                    referral_id=referral_id,
                     day=day,
                     month=month,
                     year=year
@@ -543,7 +553,7 @@ class CrudePayments:
                 raise Exception(f'Ошибка при получении платежей пользователя: {ex}')
 
     # Функция для получения данных определенного пользователя с таблицы Payments
-    async def get_all_payments_and_user(self, telegram_id: int, plan: str | None = None) -> list[Payments] | bool:
+    async def get_all_payments_and_user(self, telegram_id: int | None = None, plan: str | None = None, referral_id: int | None = None) -> list[Payments] | bool:
         """
         Функция для получения данных определенного пользователя с таблицы Payments
         :param telegram_id: Телеграм айди
@@ -554,8 +564,10 @@ class CrudePayments:
             try:
                 if plan:
                     result = await conn.execute(select(Payments).where(Payments.telegram_id == telegram_id).where(Payments.plan == plan))
-                else:
+                elif telegram_id:
                     result = await conn.execute(select(Payments).where(Payments.telegram_id == telegram_id))
+                else:
+                    result = await conn.execute(select(Payments).where(Payments.referral_id == referral_id))
 
                 payments = result.scalars().all()
 

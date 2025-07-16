@@ -8,6 +8,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, UUID
 from sqlalchemy.orm import relationship
 
 from .db import Base, DATABASE_URL
+from config import grps
 
 
 # Таблица Пользователей
@@ -65,6 +66,41 @@ class Subscriptions(Base):
             'exclusive': 'Эксклюзивный тариф',
             'all': 'Тариф на все'
         }
+    # Цены на тарифы
+    @staticmethod
+    def get_price_plans():
+        return {
+            'base': 1000,
+            'advanced': 2000,
+            'exclusive': 3000,
+            'all': 4000
+        }
+    # Количество дней
+    @staticmethod
+    def get_days_plans():
+        return {
+            'base': 30,
+            'advanced': 30,
+            'exclusive': 30,
+            'all': 60
+        }
+    # Получение ссылок на группы для каждого тарифа
+    @staticmethod
+    def get_group_link():
+        return {
+            'base': 'https://t.me/+fA1ChDmNAMYwYTMy',
+            'advanced': 'https://t.me/+n_j3dU8LgXcyMTky',
+            'exclusive': 'https://t.me/+GlsCptU3COQ4ZDBi',
+            'all': 'https://t.me/+5X_I13gfXG44ZDRi'
+        }
+    @staticmethod
+    def get_group_ids():
+        return {
+            'base': grps[0],
+            'advanced': grps[1],
+            'exclusive': grps[2],
+            'all': grps[3]
+        }
 
 # Таблица Платежей
 class Payments(Base):
@@ -72,6 +108,8 @@ class Payments(Base):
     id = Column(String(36), primary_key=True, default=lambda: str(uuid4()))
     # Телеграм айди для привязки
     telegram_id = Column(Integer, ForeignKey('users.telegram_id'), nullable=False)
+    # Реферальная привязка
+    referral_id = Column(Integer, nullable=True, default=None)
     # Дата покупки
     registered_at = Column(DateTime, default=datetime.now(timezone.utc))
     # Тариф
