@@ -13,8 +13,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Копирование всего проекта
 COPY . .
 
-## Запуск асинхронных тестов
-#RUN pytest -v --asyncio-mode=strict
+# Запуск асинхронных тестов
+RUN pytest -v --asyncio-mode=strict
 
 # Запуск приложения (если тесты прошли)
 CMD ["python", "main.py"]
