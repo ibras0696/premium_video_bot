@@ -45,6 +45,3 @@ if __name__ == '__main__':
         logging.info("Bot stopped by user")
     except Exception as e:
         logging.critical(f"Критическая ошибка: {e}", exc_info=True)
-
-# Ссылка на план нейронки https://chatgpt.com/c/68642b54-32f4-8005-8be1-f4b5d55ebc0f
-
