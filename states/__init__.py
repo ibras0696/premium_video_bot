@@ -1,1 +1,1 @@
-from .course_states import CourseState
+from .course_states import *

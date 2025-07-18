@@ -123,13 +123,14 @@ class CrudeUser:
                 raise Exception(f'Ошибка при получении пользователей по referral_id={referral_id}: {ex}')
 
     # Функция для обновления данных о пользователе
-    async def update_user(self, telegram_id: int, user_name: str | None = None, referral_id: int | None = None, balance: int | None = None) -> bool:
+    async def update_user(self, telegram_id: int, user_name: str | None = None, referral_id: int | None = None, balance: int | None = None, reduce_balance: int | None = None) -> bool:
         """
         Обновление данных о пользователе
         :param telegram_id: Телеграм айди
         :param user_name: Ник для изменения
         :param referral_id: Реферальный код для изменения
         :param balance: Баланс для изменения
+        :param reduce_balance: В Случае уменьшения баланса
         :return: True, если пользователь найден и обновлен, иначе False
         """
 
@@ -146,6 +147,8 @@ class CrudeUser:
                     user.referral_id = referral_id
                 if balance is not None:
                     user.balance += balance
+                if reduce_balance is not None:
+                    user.balance -= reduce_balance
 
                 await conn.commit()
                 return True
@@ -455,6 +458,7 @@ class CrudeSubscriptions:
                 return sub
             except Exception as ex:
                 raise Exception(f'Ошибка при проверке подписки: {ex}')
+
 
 # Класс дла работы с Payments Таблицей
 class CrudePayments:

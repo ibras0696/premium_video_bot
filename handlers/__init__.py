@@ -1,5 +1,6 @@
 from aiogram import Router
 
+from .take_ref_balance import router as take_router
 from .course import router as course_router
 from .profile import router as profie_router
 from .payment import router as payment_router
@@ -17,6 +18,7 @@ router.include_routers(
     profie_router, # Профиль
     admin_tg_router, # Админ тг групп
     support_router, # Поддержка
+    take_router, # Снятие денег
 
 )
 

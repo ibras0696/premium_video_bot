@@ -4,7 +4,8 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 from aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
 
 
-def inline_keyboard_buttons(buttons_dct: dict, starts: str='', adjust: int=2, url_btn: bool= False) -> InlineKeyboardMarkup:
+def inline_keyboard_buttons(buttons_dct: dict, starts: str = '', adjust: int = 2,
+                            url_btn: bool = False) -> InlineKeyboardMarkup:
     '''
     Функция возвращает несколько кнопок
     :param buttons_dct: Словарь {кнопка: ссылка или callback}
@@ -40,18 +41,17 @@ start_kb = inline_keyboard_buttons(
 ref_and_course_kb = inline_keyboard_buttons(
     buttons_dct={
         '🎓 Хочу пройти курс!': 'course',
-        '🚀 Мой Профиль' : 'profile',
+        '🚀 Мой Профиль': 'profile',
         '🔗 Моя реферальная ссылка': 'ref',
     },
     adjust=1,
     starts='get_start_'
 )
 
-
 profile_kb = inline_keyboard_buttons(
     buttons_dct={
-#        '💸 Снять деньги' : 'take',     # Кнопка для вывода баланса
-        '🔙 Назад'         : 'back'     # Вернуться в главное меню или на шаг назад
+        #        '💸 Снять деньги' : 'take',     # Кнопка для вывода баланса
+        '🔙 Назад': 'back'  # Вернуться в главное меню или на шаг назад
     },
     adjust=1,  # По одной кнопке в ряд
     starts='profile_'  # Префикс callback-данных
@@ -70,31 +70,49 @@ course_kb = inline_keyboard_buttons(
     starts='course_'
 )
 
+
 # КБ покупки курса
-pay_course_kb = inline_keyboard_buttons(
-    buttons_dct={
-        '💳 Оплатить курс': 'pay',
-        '🛠 Поддержка': 'support',
-        '🔙 Назад': 'back',
-    },
-    adjust=1,
-    starts='pay_course_'
-)
+def pay_course_kb(url_buy: str) -> InlineKeyboardMarkup:
+    keyboard = InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text='💸 Подтвердить оплату', callback_data=f'pay_course_buy')],
+
+        # ✅ Кнопка-ссылка
+        [InlineKeyboardButton(text='💳 Оплатить курс', url=url_buy)],
+
+        # Остальные обычные callback-кнопки
+        [InlineKeyboardButton(text='🛠 Поддержка', callback_data='pay_course_support')],
+        [InlineKeyboardButton(text='🔙 Назад', callback_data='pay_course_back')],
+    ])
+    return keyboard
+
 
 # Реферальный
-def refer_kb(back: bool = True, take: bool = False):
-        return inline_keyboard_buttons(
+def refer_kb(take: bool = False):
+    return inline_keyboard_buttons(
         buttons_dct={
             '💸 Снять деньги': 'take' if take else None,  # Кнопка для вывода баланса
-            '🔙 Назад': 'back' # Назад
+            '🔙 Назад': 'back'  # Назад
         },
         starts='ref_',
         adjust=1
-        )
+    )
 
+# Поддержка назад
 support_kb = inline_keyboard_buttons(
     buttons_dct={
         '🔙 Назад': 'back',
     },
     starts='support_'
 )
+
+# Кнопка подтверждения снятия денег
+take_of_confirm_kb = inline_keyboard_buttons(
+    buttons_dct={
+        '💸 Подтвердить': 'con',
+        '🔙 Назад': 'back',
+    },
+    starts='take_confirm_'
+)
+
+# Поступление платежа
+admin_take_confirm_kb = ''

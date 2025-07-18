@@ -27,7 +27,7 @@ TOKEN_BOT = os.getenv('TOKEN_BOT')
 
 # Реферальная ссылка
 REFFER_LINK = (os.getenv('REFFER_LINK')
-               .replace('YourBot', 'PremiumNFTVideobot')  # Меняем на имя бота свое
+               .replace('YourBot', 'Yehe_Bot')  # Меняем на имя бота свое
                )  # Удаляем конец для возможности поставки ссылку
 # Пример: https://t.me/PremiumNFTVideobot?start=Нужный вам айди
 
