@@ -20,7 +20,7 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
             # Токен платежа
             pay_token = data.get('pay_token')
             # Тариф
-            pay_plan = data.get('pay_token')
+            pay_plan = data.get('pay_plan')
             # Сохранение Клавиатуры
             pay_kb = data.get('pay_kb')
 
@@ -41,7 +41,8 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
                     await call_back.message.edit_text(text=text, reply_markup=profile_kb)
                 # В случае если время в ожидании
                 elif result is None:
-                    await call_back.message.edit_text(text=message_texts.loading_payment_text, reply_markup=pay_kb)
+                    if call_back.message.text != message_texts.loading_payment_text:
+                        await call_back.message.edit_text(text=message_texts.loading_payment_text, reply_markup=pay_kb)
                 # В случае если истекло время платежа
                 else:
                     await call_back.message.edit_text(
@@ -51,13 +52,14 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
                     await state.clear()
 
         case 'pay_course_support':
-            await call_back.message.edit_text(text=message_texts.support_message_text, reply_markup=support_kb)
+            await call_back.message.edit_reply_markup(text=message_texts.support_message_text, reply_markup=support_kb)
 
         case 'pay_course_back':
             await call_back.message.edit_text(message_texts.course_text, reply_markup=course_kb)
+            await state.clear()
         case _:
             pass
-    await state.clear()
+
 
 
 async def handle_pay(user_id: int, plans: str):

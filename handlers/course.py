@@ -35,7 +35,7 @@ async def course_cmd(call_back: CallbackQuery, state: FSMContext):
 
         await state.set_state(PaymentsState.pay_bool)
         await state.update_data(
-            pay_token=payment.get('pay_url'),
+            pay_token=payment.get('pay_id'),
             pay_sum=plans_price,
             pay_plan=data,
             pay_kb=kb

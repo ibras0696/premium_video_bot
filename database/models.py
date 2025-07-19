@@ -70,10 +70,10 @@ class Subscriptions(Base):
     @staticmethod
     def get_price_plans():
         return {
-            'base': 5,
-            'advanced': 5,
-            'exclusive': 5,
-            'all': 5
+            'base': 1,
+            'advanced': 1,
+            'exclusive': 1,
+            'all': 1
         }
         # return {
         #     'base': 990,

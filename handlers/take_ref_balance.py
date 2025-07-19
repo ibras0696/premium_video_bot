@@ -50,11 +50,11 @@ async def take_start_cmd(message: Message, state: FSMContext):
                 await state.clear()  # Сбрасываем состояние
         else:
             # Если данные введены не в том формате — подсказываем правильный
-            await message.answer(text=message_texts.take_of_text)
+            await message.answer(text=message_texts.take_of_text, reply_markup=refer_kb())
 
     except ValueError:
         # Если не удалось преобразовать сумму или номер — подсказываем правильный формат
-        await message.answer(message_texts.take_of_text)
+        await message.answer(text=message_texts.take_of_text, reply_markup=refer_kb())
 
 
 # Обработка нажатия на кнопки подтверждения / отмены снятия
