@@ -80,8 +80,12 @@ async def take_confirm_cmd(call_back: CallbackQuery, state: FSMContext, bot: Bot
             # Уменьшаем баланс пользователя на указанную сумму
             await CrudeUser().update_user(telegram_id=telegram_id, reduce_balance=take_sum)
 
-            # Уведомляем администратора о поступлении заявки
-            await bot.send_message(ADMIN_IDS[1], message_texts.admin_take_confirm_text(take_text))
+            for admin in ADMIN_IDS:
+                # Отправляем уведомление администратору о снятии средств
+                await bot.send_message(
+                    admin,
+                    message_texts.admin_take_confirm_text(take_text)
+                )
 
         case 'back':
             # Если пользователь нажал "назад" — возвращаемся в главное меню
