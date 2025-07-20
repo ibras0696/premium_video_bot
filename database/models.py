@@ -67,18 +67,18 @@ class Subscriptions(Base):
     # Цены на тарифы
     @staticmethod
     def get_price_plans():
-        # return {
-        #     'base': 1,
-        #     'advanced': 1,
-        #     'exclusive': 1,
-        #     'all': 1
-        # }
         return {
-            'base': 990,
-            'advanced': 1490,
-            'exclusive': 2990,
-            'all': 4990
+            'base': 1,
+            'advanced': 1,
+            'exclusive': 1,
+            'all': 1
         }
+        # return {
+        #     'base': 990,
+        #     'advanced': 1490,
+        #     'exclusive': 2990,
+        #     'all': 4990
+        # }
     # Количество дней
     @staticmethod
     def get_days_plans():
