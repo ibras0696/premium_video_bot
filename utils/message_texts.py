@@ -44,7 +44,8 @@ async def refer_id_text(telegram_id: int) -> str:
     payments_user = await CrudePayments().get_all_payments_and_user(referral_id=telegram_id)
 
     cont_users = len(user_ref_ids) if user_ref_ids else 0
-    return (f'📨 Твоя персональная реферальная ссылка:\n👉{REFFER_LINK}{telegram_id}'
+    return (f'📨 Приглашай друзей — и зарабатывай вместе с нами!'
+            f'\n📨 Твоя персональная реферальная ссылка:\n👉{REFFER_LINK}{telegram_id}'
             f'\n👥 Общее число приглашённых: {cont_users}'
             f'\n🛒 Покупок от приглашённых: {len(payments_user) if payments_user else 0}'
             f'\n💰 Твой баланс: {user.balance}')
