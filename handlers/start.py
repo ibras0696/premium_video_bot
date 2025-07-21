@@ -29,7 +29,7 @@ async def start_cmd(message: Message, state: FSMContext, command: CommandStart):
                                        user_name=message.from_user.username,
                                        referral_id=r_d)
             # Отправляем сообщение с реферальной ссылкой
-            await message.answer_video(message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
+            await message.answer_video(caption=message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
     # Если ведены доп параметры
     except ValueError:
         pass
@@ -45,7 +45,7 @@ async def start_cmd(message: Message, state: FSMContext):
     await CrudeUser().add_user(telegram_id=message.from_user.id,
                                user_name=message.from_user.username)
 
-    await message.answer_video(message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
+    await message.answer_video(caption=message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
 
 
 @router.callback_query(F.data == 'start')
