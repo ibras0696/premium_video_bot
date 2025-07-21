@@ -52,7 +52,7 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
                     await state.clear()
 
         case 'pay_course_support':
-            await call_back.message.edit_reply_markup(text=message_texts.support_message_text, reply_markup=support_kb)
+            await call_back.message.edit_text(text=message_texts.support_message_text, reply_markup=support_kb)
 
         case 'pay_course_back':
             await call_back.message.edit_text(message_texts.course_text, reply_markup=course_kb)
