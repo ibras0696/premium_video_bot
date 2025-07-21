@@ -5,7 +5,7 @@ from aiogram.types import Message, CallbackQuery
 
 from keyboards import start_kb, ref_and_course_kb, course_kb, profile_kb, refer_kb
 from utils import message_texts
-from config import REFFER_LINK
+from static.start_video_path import get_start_mov_file
 
 # Функции с БД
 from database import CrudeUser
@@ -28,7 +28,8 @@ async def start_cmd(message: Message, state: FSMContext, command: CommandStart):
             await CrudeUser().add_user(telegram_id=message.from_user.id,
                                        user_name=message.from_user.username,
                                        referral_id=r_d)
-            await message.answer(message_texts.start_text, reply_markup=start_kb)
+            # Отправляем сообщение с реферальной ссылкой
+            await message.answer_video(message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
     # Если ведены доп параметры
     except ValueError:
         pass
@@ -44,7 +45,7 @@ async def start_cmd(message: Message, state: FSMContext):
     await CrudeUser().add_user(telegram_id=message.from_user.id,
                                user_name=message.from_user.username)
 
-    await message.answer(message_texts.start_text, reply_markup=start_kb)
+    await message.answer_video(message_texts.start_text, video=get_start_mov_file(), reply_markup=start_kb)
 
 
 @router.callback_query(F.data == 'start')
