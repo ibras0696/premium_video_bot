@@ -12,7 +12,7 @@ logging.basicConfig(
 )
 
 # 🔐 Токен бота (в проде храни в .env)
-TOKEN = '8174103204:AAFKSmgjdpng3sCEVd4z6PubGy9Mfn-el8s'
+TOKEN = '8025589549:AAEwwxAbjUfLTE8pf72AM72vtP5eym9iOOw'
 if not TOKEN:
     logging.error("Токен бота не указан!")
     exit(1)

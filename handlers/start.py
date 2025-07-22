@@ -1,13 +1,12 @@
 from aiogram import Router, F
 from aiogram.filters import Command, CommandStart
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
+from aiogram.exceptions import TelegramBadRequest
 
 from keyboards import start_kb, ref_and_course_kb, course_kb, profile_kb, refer_kb
 from utils import message_texts
 from static.start_video_path import get_start_mov_file, start_mov_file_id
-
-# Функции с БД
 from database import CrudeUser
 
 router = Router()
@@ -16,38 +15,30 @@ router = Router()
 # Обработка старта через реферальную ссылку
 @router.message(CommandStart(deep_link=True))
 async def start_cmd(message: Message, state: FSMContext, command: CommandStart):
-    # Чистка состояний
     await state.clear()
-
-    # Проверка передачи реферального кода
     ref_id = command.args
+
     try:
         if ref_id:
             r_d = int(ref_id)
-            # Добавляем в Базу
             await CrudeUser().add_user(telegram_id=message.from_user.id,
                                        user_name=message.from_user.username,
                                        referral_id=r_d)
-            # Отправляем сообщение с реферальной ссылкой
-            await message.answer_video(caption=message_texts.start_text, video=start_mov_file_id, reply_markup=start_kb)
-    # Если ведены доп параметры
+            await send_start_video(message)
     except ValueError:
         pass
     except Exception as ex:
         raise Exception(f'Ошибка при обработке реферальной ссылки: {ex}')
 
 
-
 # Обработка обычного старта
 @router.message(CommandStart())
 async def start_cmd(message: Message, state: FSMContext):
-    # Очистка состояний
     await state.clear()
-    # Добавляем в Базу
     await CrudeUser().add_user(telegram_id=message.from_user.id,
                                user_name=message.from_user.username)
 
-    await message.answer_video(caption=message_texts.start_text, video=start_mov_file_id, reply_markup=start_kb)
+    await send_start_video(message)
 
 
 @router.callback_query(F.data == 'start')
@@ -72,3 +63,33 @@ async def get_start_cmd(call_back: CallbackQuery):
                                               reply_markup=refer_kb(take=True))
         case _:
             pass
+
+
+# Отправка файла по айди или локально
+async def send_start_video(message: Message):
+    try:
+        # Пытаемся отправить по file_id
+        await message.answer_video(caption=message_texts.start_text, video=start_mov_file_id, reply_markup=start_kb)
+    except TelegramBadRequest as e:
+        # Если file_id невалиден — используем локальный файл
+        if "file identifier" in str(e) or "HTTP URL" in str(e) or "remote file identifier" in str(e):
+            video_file = get_start_mov_file()  # путь из функции
+            await message.answer_video(caption=message_texts.start_text, video=video_file, reply_markup=start_kb)
+        else:
+            raise  # если ошибка не связана с file_id — пробрасываем
+
+# # Тестовое получение файл айди видео
+# @router.message(F.video)
+# async def get_file_id(message: Message):
+#     if message.video:
+#         video_id = message.video.file_id
+#         await message.answer(f"🎥 Получен video file_id:\n{video_id}")
+#     else:
+#         await message.answer("Пожалуйста, отправьте видео для получения file_id.")
+#
+# @router.message(F.text)
+# async def send_video_file_id(message: Message):
+#     if message.text:
+#         await message.answer_video(video=message.text, caption="Вот ваше видео!")
+#     else:
+#         await message.answer("Отправьте 'send video' для получения видеофайла.")

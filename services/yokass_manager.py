@@ -57,11 +57,3 @@ def checkout_payment(payment_id: str) -> bool | None:
         return None
     else:
         return False
-
-data = create_payment(
-    1,
-    1,
-
-)
-print(data['pay_url'])
-print(checkout_payment(data['pay_id']))
