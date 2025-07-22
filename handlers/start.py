@@ -34,7 +34,8 @@ async def start_cmd(message: Message, state: FSMContext, command: CommandStart):
     except ValueError:
         pass
     except Exception as ex:
-        print(f'Ошибка: {ex}')
+        raise Exception(f'Ошибка при обработке реферальной ссылки: {ex}')
+
 
 
 # Обработка обычного старта
