@@ -6,7 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 
 from keyboards import start_kb, ref_and_course_kb, course_kb, profile_kb, refer_kb
 from utils import message_texts
-from static.start_video_path import get_start_mov_file, start_mov_file_id
+from static.start_video_path import get_start_mov_file, start_mov_file_id, save_new_start_video_id
 from database import CrudeUser
 
 router = Router()
@@ -67,17 +67,38 @@ async def get_start_cmd(call_back: CallbackQuery):
 
 # Отправка файла по айди или локально
 async def send_start_video(message: Message):
+    global start_mov_file_id
     try:
-        # Пытаемся отправить по file_id
-        await message.answer_video(caption=message_texts.start_text, video=start_mov_file_id, reply_markup=start_kb)
-    except TelegramBadRequest as e:
-        # Если file_id невалиден — используем локальный файл
-        if "file identifier" in str(e) or "HTTP URL" in str(e) or "remote file identifier" in str(e):
-            video_file = get_start_mov_file()  # путь из функции
-            await message.answer_video(caption=message_texts.start_text, video=video_file, reply_markup=start_kb)
+        if start_mov_file_id:
+            await message.answer_video(
+                caption=message_texts.start_text,
+                video=start_mov_file_id,
+                reply_markup=start_kb
+            )
         else:
-            raise  # если ошибка не связана с file_id — пробрасываем
-
+            # Нет file_id — отправляем локальный файл сразу
+            video_file = get_start_mov_file()
+            sent_message = await message.answer_video(
+                caption=message_texts.start_text,
+                video=video_file,
+                reply_markup=start_kb
+            )
+            new_file_id = sent_message.video.file_id
+            save_new_start_video_id(new_file_id)
+    except TelegramBadRequest as e:
+        # Ошибка из-за неверного file_id — отправляем локальный файл и обновляем id
+        if "file_id" in str(e).lower() or "wrong file identifier" in str(e).lower():
+            video_file = get_start_mov_file()
+            sent_message = await message.answer_video(
+                caption=message_texts.start_text,
+                video=video_file,
+                reply_markup=start_kb
+            )
+            new_file_id = sent_message.video.file_id
+            save_new_start_video_id(new_file_id)
+        else:
+            # Проброс других ошибок
+            raise
 # # Тестовое получение файл айди видео
 # @router.message(F.video)
 # async def get_file_id(message: Message):
