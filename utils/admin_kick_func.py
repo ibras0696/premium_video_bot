@@ -1,6 +1,6 @@
 from aiogram.exceptions import TelegramBadRequest
 from aiogram import Bot
-
+# Функция кикает пользователей с группы
 async def kick_user_if_not_admin(bot: Bot, user_id: int, group_id: int):
     try:
         member = await bot.get_chat_member(chat_id=group_id, user_id=user_id)

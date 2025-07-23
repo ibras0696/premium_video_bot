@@ -11,16 +11,16 @@ from config import GROUP_IDS, grps
 router = Router()
 
 
-@router.message(Command('del'))
-async def del_test_router(message: Message):
-    await CrudeSubscriptions().all_reduce_subscriptions(29)
-    await message.answer('Уменишилось дней подписки')
-
-
-@router.message(Command('one'))
-async def del_test_router(message: Message):
-    await CrudeSubscriptions().all_reduce_subscriptions(1)
-    await message.answer('Уменьшилось дней подписки')
+# @router.message(Command('del'))
+# async def del_test_router(message: Message):
+#     await CrudeSubscriptions().all_reduce_subscriptions(29)
+#     await message.answer('Уменишилось дней подписки')
+#
+#
+# @router.message(Command('one'))
+# async def del_test_router(message: Message):
+#     await CrudeSubscriptions().all_reduce_subscriptions(1)
+#     await message.answer('Уменьшилось дней подписки')
 
 # Обработка заявок на вступление
 @router.chat_join_request()
