@@ -13,6 +13,9 @@ router = Router()
 
 @router.callback_query(F.data.startswith('pay_course_'))
 async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     user_id = call_back.message.chat.id
     match call_back.data:
         case 'pay_course_buy':

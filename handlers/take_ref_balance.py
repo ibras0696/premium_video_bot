@@ -62,6 +62,8 @@ async def take_start_cmd(message: Message, state: FSMContext):
 async def take_confirm_cmd(call_back: CallbackQuery, state: FSMContext, bot: Bot):
     call = call_back.data.replace('take_confirm_', '')  # Получаем тип действия: 'con' или 'back'
     user_id = call_back.message.chat.id
+    # Удаление мигающих кнопок
+    await call_back.answer()
 
     match call:
         case 'con':

@@ -9,4 +9,7 @@ router = Router()
 
 @router.callback_query(F.data.startswith('support_'))
 async def support_back_cmd(call_back: CallbackQuery):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     await call_back.message.edit_text(message_texts.ref_and_course_text, reply_markup=ref_and_course_kb)

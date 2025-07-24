@@ -14,6 +14,9 @@ router = Router()
 
 @router.callback_query(F.data.startswith('profile_'))
 async def profile_cmd(call_back: CallbackQuery):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     match call_back.data:
         # case 'profile_take':
         #     await call_back.message.answer('Пока не готово')
@@ -23,6 +26,9 @@ async def profile_cmd(call_back: CallbackQuery):
 
 @router.callback_query(F.data.startswith('ref_'))
 async def refer_info_cmd(call_back: CallbackQuery, state: FSMContext):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     user_id = call_back.message.chat.id
     match call_back.data:
         case 'ref_take':

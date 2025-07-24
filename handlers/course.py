@@ -15,6 +15,9 @@ router = Router()
 
 @router.callback_query(F.data.startswith('course_'))
 async def course_cmd(call_back: CallbackQuery, state: FSMContext):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     kb = None
 
     data = call_back.data.replace('course_', '')

@@ -43,6 +43,9 @@ async def start_cmd(message: Message, state: FSMContext):
 
 @router.callback_query(F.data == 'start')
 async def start_query(call_back: CallbackQuery):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     await call_back.message.delete()
     # Отправляем сообщение с реферальной ссылкой
     await call_back.message.answer(message_texts.ref_and_course_text, reply_markup=ref_and_course_kb)
@@ -51,6 +54,9 @@ async def start_query(call_back: CallbackQuery):
 # Обработка кнопки реф ссылки
 @router.callback_query(F.data.startswith('get_start_'))
 async def get_start_cmd(call_back: CallbackQuery):
+    # Удаление мигающих кнопок
+    await call_back.answer()
+
     user_id = call_back.message.chat.id
     match call_back.data:
         case 'get_start_course':
