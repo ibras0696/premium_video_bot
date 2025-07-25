@@ -25,8 +25,13 @@ async def subscription_text():
     Возвращает текст статистики подписок для администратора.
     """
     subs = await subscriptions_crd.get_all_users_subscriptions()
+
+    if subs is False:
+        return 'Нет подписок'
+
     if len(subs) == 0:
         return 'Нет подписок'
+
 
     now = datetime.now(timezone.utc)
 
@@ -63,6 +68,10 @@ async def users_text() -> str:
     Возвращает текст со статистикой о таблице пользователей.
     """
     users = await users_crd.get_all_users()
+
+    if users is False:
+        return 'Нет пользователей'
+
     if len(users) == 0:
         return 'Нет пользователей'
     now = datetime.now(timezone.utc)
@@ -93,6 +102,10 @@ async def payments_text() -> str:
     Возвращает текст со статистикой о таблице платежей.
     """
     pays = await payments_crd.get_all_payments()
+
+    if pays is False:
+        return 'Нет Платежей'
+
     if len(pays) == 0:
         return 'Нет Платежей'
     now = datetime.now(timezone.utc)
