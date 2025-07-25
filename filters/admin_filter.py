@@ -19,5 +19,5 @@ class AdminCallBackFilter(BaseFilter):
     async def __call__(self, call_back: CallbackQuery):
         if not call_back.message:
             return False
-        return call_back.message.chat.id == self.ADMIN_IDS
+        return call_back.message.chat.id in self.ADMIN_IDS
 
