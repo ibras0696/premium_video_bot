@@ -105,7 +105,8 @@ class ErrorMiddleware(BaseMiddleware):
     ) -> Any:
         try:
             return await handler(event, data)
-
+        except TelegramBadRequest:
+            pass
         except Exception as e:
             bot: Bot = data.get("bot")
             tb = traceback.format_exc()
