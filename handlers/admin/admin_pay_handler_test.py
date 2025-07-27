@@ -9,11 +9,9 @@ from states import PaymentsState
 from utils import message_texts
 from services import checkout_payment, create_payment
 
-from filters.admin_filter import  AdminTypeFilter, AdminCallBackFilter
-
+from filters.admin_filter import AdminTypeFilter, AdminCallBackFilter
 
 router = Router()
-
 
 
 @router.callback_query(Command('test_pay'), AdminTypeFilter())
@@ -105,7 +103,8 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
                 # В случае если истекло время платежа
                 else:
                     await call_back.message.edit_text(
-                        text=message_texts.end_payment_text + '\n\n\n' + await message_texts.get_profile_text(call_back.message.chat.id),
+                        text=message_texts.end_payment_text + '\n\n\n' + await message_texts.get_profile_text(
+                            call_back.message.chat.id),
                         reply_markup=ref_and_course_kb
                     )
                     await state.clear()
@@ -121,7 +120,6 @@ async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
             pass
 
 
-
 async def handle_pay(user_id: int, plans: str):
     days = Subscriptions.get_days_plans().get(plans, 1)
     price = Subscriptions.get_price_plans().get(plans, 1)
@@ -133,4 +131,3 @@ async def handle_pay(user_id: int, plans: str):
     await paym.add_payment(user_id, plans, days, price)
 
     return message_texts.accept_course_text + '\n\n' + await message_texts.get_profile_text(user_id)
-
