@@ -14,7 +14,7 @@ from filters.admin_filter import AdminTypeFilter, AdminCallBackFilter
 router = Router()
 
 
-@router.callback_query(Command('test_pay'), AdminTypeFilter())
+@router.message(Command('test_pay'), AdminTypeFilter())
 async def pay_course_cmd(call_back: CallbackQuery, state: FSMContext):
     # Удаление мигающих кнопок
     await call_back.answer()
