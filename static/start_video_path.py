@@ -1,9 +1,7 @@
 import os
 from aiogram.types import FSInputFile
 
-#rt_mov_file_id = 'BAACAgIAAyEFAASai0lTAAMWaH9pNdICvCF-9QViHUxW93tZkTkAAkJxAAJ6rPhLIk_6M1BcfGA2BA'
-# start_mov_file_id = 'BAACAgIAAyEFAASai0lTAAMcaH_I_dC_hshKUy33HKr2YRDz9BIAAkJxAAJ6rPhLp_bkIAVQ7TI2BA'
-start_mov_file_id = 'BAACAgIAAyEFAASai0lTAAMcaH_I_dC_hshKUy33HKr2YRDz9BIAAkJxAAJ6rPhLp_bkIAVQ7TI2BA'
+start_mov_file_id = 'BAACAgIAAxkBAAMGaIalqQSRrQ7goRq2m2MhrKP_wrAAAryCAALNswlITsE8xx4dOhM2BA'
 
 # Функция для получения пути к видеофайлу, который будет отправлен пользователю при нажатии кнопки "Старт".
 def get_start_mov_file() -> FSInputFile:
