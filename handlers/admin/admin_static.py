@@ -55,8 +55,8 @@ async def get_file_id(call_back: CallbackQuery):
     video = call_back.message.video
     if video:
         file_id = video.file_id
-        await call_back.answer(f"File ID: {file_id}")
+        await call_back.message.answer(f"File ID: {file_id}")
     else:
-        await call_back.answer("Видео не найдено.")
+        await call_back.message.answer("Видео не найдено.")
 
     await call_back.message.delete()
