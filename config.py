@@ -27,14 +27,14 @@ TOKEN_BOT = os.getenv('TOKEN_BOT')
 
 # Реферальная ссылка
 REFFER_LINK = (os.getenv('REFFER_LINK')
-               .replace('YourBot', 'NFT_Time_Bot')  # Меняем на имя бота свое
+               .replace('YourBot', 'nft_skill_Bot')  # Меняем на имя бота свое
                )  # Удаляем конец для возможности поставки ссылку
-# Пример: https://t.me/NFT_Time_Bot?start=Нужный вам айди
+# Пример: https://t.me/PremiumNFTVideobot?start=Нужный вам айди
 
 # Айди Магазина
 YOOKASSA_SHOP_ID = int(os.getenv('YOOKASSA_SHOP_ID')) if not None else 1
 # Ключ Магазина
 YOOKASSA_SECRET_KEY = os.getenv('YOOKASSA_SECRET_KEY')
 # Адрес после оплаты для переадресации
-BASE_URL = os.getenv('BASE_URL'),'https://t.me/NFT_Time_Bot'
+BASE_URL = os.getenv('BASE_URL'),'https://t.me/nft_skill_Bot'
 
