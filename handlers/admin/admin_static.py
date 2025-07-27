@@ -47,16 +47,16 @@ async def update_admin_start_kb(call_back: CallbackQuery):
 
 
 # Доп Роутер для получения айди файла
-@router.callback_query(F.video, AdminTypeFilter())
-async def get_file_id(call_back: CallbackQuery):
+@router.message(F.video, AdminTypeFilter())
+async def get_file_id(message: Message):
     """
     Обработчик для получения ID видеофайла.
     """
-    video = call_back.message.video
+    video = message.video
     if video:
         file_id = video.file_id
-        await call_back.message.answer(f"File ID: {file_id}")
+        await message.answer(f"File ID: {file_id}")
     else:
-        await call_back.message.answer("Видео не найдено.")
+        await message.answer("Видео не найдено.")
 
-    await call_back.message.delete()
+    # await message.delete()
