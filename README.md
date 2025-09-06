@@ -5,6 +5,8 @@
 - 🤖 Aiogram (Telegram Bot API)
 - ⏰ APScheduler (планировщик задач)
 - 🗄️ SQLAlchemy (ORM)
+- 〽 Pytest + Aiohttp (тестирование)
+- 🔐 Python Dotenv (управление переменными окружения)
 - 🗃️ SQLite + Aiosqlite (база данных)
 - 🔄 Aiohttp (асинхронные HTTP-запросы)
 - 💳 Yookassa (интеграция платежей)
