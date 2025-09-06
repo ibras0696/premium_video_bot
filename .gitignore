@@ -2,6 +2,7 @@
 #.env
 # Игнор базы данных
 /database/DataBase.db
+.env
 .idea
 .venv
 
